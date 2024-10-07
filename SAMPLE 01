@@ -1,0 +1,40 @@
+STEP 1:
+Create a table in SE11, make sure to indclude administration fields (createdby, createddt,changedby, changeddt, etc...and time as well), and also this field lastchanged : abp_lastchange_tstmpl;
+Sample of codes: 
+@EndUserText.label : 'Interface Master List'
+@AbapCatalog.enhancement.category : #NOT_EXTENSIBLE
+@AbapCatalog.tableCategory : #TRANSPARENT
+@AbapCatalog.deliveryClass : #A
+@AbapCatalog.dataMaintenance : #ALLOWED
+define table ztj_intf_master {
+  key mandt   : mandt not null;
+  key intfid  : edoc_interface_id not null;
+  intfnm      : edoc_interface_desc;
+  intfdir     : edoc_interface_dir;
+  include /isdfps/admin_task;
+  lastchanged : abp_lastchange_tstmpl;
+
+}
+
+STEP 2:
+In ADT, right click your table, and chose Generate ABAP repository objects, if you dont have this, probably you need to update your ADT to the last version
+Pick ABAP Restfull...: UI Service
+In the next screen:
+Data Model: ZTJ_I_INTF_MASTER ( add _I_ as our data model, following SAP naming convention)
+Behavior: CLass: ZTJ_CL_INTF_MASTER, Draft: ZTJ_INTF_MASTERD
+Service Projection: ZTJ_C_INTF_MASTER
+Service Definition: ZTJ_SD_INTF_MASTER
+Service Binding: ZTJ_SB_INTF_MASTER
+Click Next, then next again to get the TR#
+Click Finish
+Once finished, we need to publish the service
+
+STEP 3:
+Click Publish
+If any errors occured, you can publish it following this docs: https://community.sap.com/t5/technology-q-a/error-while-publishing-v4-version-service-with-rap/qaq-p/12620864#:~:text=7%20Kudos.%20You%20have%20to%20use%20the%20transaction%20/iwfnd/v4_admin%20to
+
+STEP 4:
+Test your service, you will notice the admin fields need to be populated, you need to create a logic for that or try to add semantics annotation at data model level...(still could not find the best one)
+
+STEP 5:
+Publish your RAP as FIORI Apps (you will need Business Application Studiio at BTP or use Visual Studio Code (VSC)
